@@ -3,10 +3,13 @@
 import Link from "next/link"
 import { useState } from "react"
 import { ChevronDown, CheckCircle2, Zap, BarChart3, Lock, Sparkles, Link2, Brain, Rocket } from "lucide-react"
-import TestimonialsSection from "@/components/testimonials-slider" // Import the new slider component
+import TestimonialsSection from "@/components/testimonials-slider"
+import { LegalModal } from "@/components/legal-modal"
+import { legalContent } from "@/lib/legal-content"
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState(0)
+  const [activeLegalDoc, setActiveLegalDoc] = useState<string | null>(null)
 
   const faqItems = [
     {
@@ -122,10 +125,10 @@ export default function Home() {
           </a>
         </div>
         <Link
-          href="/comingsoon"
+          href="/dashboard"
           className="px-6 py-2.5 rounded-full font-semibold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white transition-all duration-300 shadow-lg hover:shadow-emerald-500/40"
         >
-          Get Started
+          Get Started (Free for now)
         </Link>
       </nav>
 
@@ -152,10 +155,10 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link
-              href="/comingsoon"
+              href="/dashboard"
               className="px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white transition-all duration-300 shadow-lg hover:shadow-emerald-500/40 hover:scale-105"
             >
-              Analyze Your Store Now
+              Analyze Your Store Now (Free)
             </Link>
             <button className="px-8 py-4 rounded-full font-semibold border-2 border-emerald-300 text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
               Watch Demo
@@ -324,8 +327,8 @@ export default function Home() {
               <div
                 key={i}
                 className={`rounded-2xl p-8 transition-all duration-300 ${plan.highlighted
-                    ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-105"
-                    : "bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg text-foreground"
+                  ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-105"
+                  : "bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg text-foreground"
                   }`}
               >
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
@@ -340,11 +343,11 @@ export default function Home() {
                 </div>
                 <button
                   className={`w-full py-3 rounded-full font-semibold transition-all mb-8 ${plan.highlighted
-                      ? "bg-white text-emerald-600 hover:bg-white/90"
-                      : "border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+                    ? "bg-white text-emerald-600 hover:bg-white/90"
+                    : "border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
                     }`}
                 >
-                  Get Started
+                  {/* Get Started */} Upcoming
                 </button>
                 <ul className="space-y-3">
                   {plan.features.map((feature, j) => (
@@ -402,10 +405,10 @@ export default function Home() {
             Get your comprehensive CRO report in minutes and start implementing today.
           </p>
           <Link
-            href="/comingsoon"
+            href="/dashboard"
             className="inline-block px-8 py-4 rounded-full font-semibold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white transition-all duration-300 shadow-lg hover:shadow-emerald-500/40 hover:scale-105"
           >
-            Analyze Your Store Now
+            Analyze Your Store Now (Free)
           </Link>
         </div>
       </section>
@@ -413,20 +416,41 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-emerald-200/50 bg-white/40 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
               <div className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
                 BrilliantSales
               </div>
               <p className="text-sm text-muted-foreground">AI-powered CRO analysis for Shopify stores</p>
             </div>
-
+            <div className="text-right">
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <button onClick={() => setActiveLegalDoc("privacy")} className="hover:text-emerald-600 transition-colors">
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveLegalDoc("terms")} className="hover:text-emerald-600 transition-colors">
+                    Terms of Service
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="border-t border-emerald-200/50 pt-8 text-center text-sm text-muted-foreground">
             <p>&copy; 2025 BrilliantSales. All rights reserved.</p>
           </div>
         </div>
       </footer>
+
+      <LegalModal
+        isOpen={!!activeLegalDoc}
+        onClose={() => setActiveLegalDoc(null)}
+        title={activeLegalDoc ? legalContent[activeLegalDoc as keyof typeof legalContent].title : ""}
+        content={activeLegalDoc ? legalContent[activeLegalDoc as keyof typeof legalContent].content : ""}
+      />
     </main>
   )
 }

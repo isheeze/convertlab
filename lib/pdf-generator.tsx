@@ -1,416 +1,263 @@
-import html2pdf from "html2pdf.js"
+// lib/pdf-generator.ts
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFViewer,
+  Font,
+  Image,
+  Link,
+} from "@react-pdf/renderer"
+import { format } from "date-fns"
 
-export async function generateCROReportPDF(report: any) {
-  const html = generateReportHTML(report)
+// Register fonts (optional but looks 1000x better)
+Font.register({
+  family: "Inter",
+  fonts: [
+    { src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.ttf" },
+    { src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.ttf", fontWeight: 600 },
+    { src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.ttf", fontWeight: 700 },
+  ],
+})
 
-  const element = document.createElement("div")
-  element.innerHTML = html
+const styles = StyleSheet.create({
+  page: { padding: 40, fontSize: 11, color: "#1f2937" },
+  title: { fontSize: 28, fontWeight: 700, marginBottom: 8, color: "#10b981" },
+  subtitle: { fontSize: 14, color: "#6b7280", marginBottom: 30 },
+  section: { marginBottom: 24 },
+  sectionTitle: { fontSize: 18, fontWeight: 700, color: "#059669", marginBottom: 12 },
+  subSection: { marginTop: 20, marginBottom: 16 },
+  subTitle: { fontSize: 14, fontWeight: 600, color: "#065f46", marginBottom: 8 },
+  competitorBox: { borderWidth: 1, borderColor: "#e5e7eb", borderRadius: 8, padding: 12, marginBottom: 16 },
+  competitorName: { fontSize: 13, fontWeight: 700, color: "#10b981", marginBottom: 6 },
+  competitorUrl: { fontSize: 10, color: "#3b82f6", marginBottom: 8 },
+  scoreBox: {
+    backgroundColor: "#d1fae5",
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  score: { fontSize: 48, fontWeight: 700, color: "#10b981" },
+  scoreLabel: { fontSize: 12, color: "#065f46", marginTop: 4 },
+  listItem: { flexDirection: "row", marginBottom: 6 },
+  bullet: { width: 6, height: 6, backgroundColor: "#10b981", borderRadius: 3, marginRight: 10, marginTop: 5 },
+  text: { flex: 1, lineHeight: 1.6 },
+  wins: { color: "#059669" },
+  fixes: { color: "#dc2626" },
+  header: { marginBottom: 30, borderBottomWidth: 2, borderBottomColor: "#10b981", paddingBottom: 16 },
+  footer: { position: "absolute", bottom: 30, left: 40, right: 40, textAlign: "center", color: "#9ca3af", fontSize: 9 },
+})
 
-  const opt = {
-    margin: 10,
-    filename: `CRO-Report-${new Date().toISOString().split("T")[0]}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { orientation: "portrait", unit: "mm", format: "a4" },
-  }
+export const generateCROReportPDF = async (report: any) => {
+  const storeUrl = report.storeUrl || "Your Shopify Store"
+  const generatedAt = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 
-  return html2pdf().set(opt).from(element).save()
-}
+  const MyDocument = () => (
+    <Document title={`CRO Report - ${storeUrl}`} author="BrilliantSales" creator="BrilliantSales AI">
+      <Page size="A4" style={styles.page}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>BrilliantSales CRO Report</Text>
+          <Text style={styles.subtitle}>AI-Powered Conversion Rate Optimization Analysis</Text>
+          <Text style={{ fontSize: 12, color: "#10b981", fontWeight: 600 }}>{storeUrl}</Text>
+          <Text style={{ fontSize: 10, color: "#6b7280", marginTop: 4 }}>Generated on {generatedAt}</Text>
+        </View>
 
-function generateReportHTML(report: any): string {
-  const score = report.executive_summary?.cro_score || 0
-  const wins = report.executive_summary?.biggest_wins || []
-  const fixes = report.executive_summary?.top_fixes || []
+        {/* Executive Summary */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Executive Summary</Text>
+          <View style={styles.scoreBox}>
+            <Text style={styles.score}>{report.executive_summary.cro_score}/100</Text>
+            <Text style={styles.scoreLabel}>Overall CRO Score</Text>
+          </View>
 
-  return `
-    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-      <style>
-        body { margin: 0; padding: 0; }
-        .header { background: linear-gradient(135deg, #10b981 0%, #0891b2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .score-box { background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #10b981; }
-        .section { margin: 20px 0; page-break-inside: avoid; }
-        .section-title { background: #e0f2fe; padding: 10px 15px; border-radius: 6px; font-weight: bold; color: #0c4a6e; margin-bottom: 10px; font-size: 14px; }
-        .subsection { margin: 15px 0; }
-        .subsection-title { font-weight: bold; color: #0891b2; margin-bottom: 8px; font-size: 13px; }
-        .point { margin: 8px 0; padding: 8px 12px; background: #f9fafb; border-left: 3px solid #10b981; border-radius: 4px; font-size: 12px; }
-        .point.negative { border-left-color: #ef4444; }
-        .chart-row { display: flex; gap: 15px; margin: 10px 0; }
-        .chart-item { flex: 1; background: #f3f4f6; padding: 10px; border-radius: 6px; font-size: 12px; }
-        .chart-label { font-weight: bold; color: #374151; margin-bottom: 5px; }
-        .chart-value { font-size: 18px; font-weight: bold; color: #10b981; }
-        .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 11px; color: #999; }
-        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-        th { background: #f3f4f6; padding: 8px; text-align: left; font-weight: bold; font-size: 12px; border-bottom: 1px solid #d1d5db; }
-        td { padding: 8px; border-bottom: 1px solid #e5e7eb; font-size: 12px; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .badge-green { background: #dcfce7; color: #166534; }
-        .badge-red { background: #fee2e2; color: #991b1b; }
-      </style>
+          <Text style={{ fontWeight: 600, marginBottom: 8, color: "#059669" }}>Biggest Wins</Text>
+          {report.executive_summary.biggest_wins.map((win: string, i: number) => (
+            <View key={i} style={styles.listItem}>
+              <View style={styles.bullet} />
+              <Text style={[styles.text, styles.wins]}>{win}</Text>
+            </View>
+          ))}
 
-      <div class="header">
-        <h1 style="margin: 0 0 10px 0; font-size: 28px;">CRO Analysis Report</h1>
-        <p style="margin: 0; font-size: 14px;">URL: ${report.storeUrl}</p>
-        <p style="margin: 5px 0 0 0; font-size: 12px;">Generated: ${new Date(report.createdAt).toLocaleDateString()}</p>
-      </div>
+          <Text style={{ fontWeight: 600, marginTop: 16, marginBottom: 8, color: "#dc2626" }}>Top Priority Fixes</Text>
+          {report.executive_summary.top_fixes.map((fix: string, i: number) => (
+            <View key={i} style={styles.listItem}>
+              <View style={styles.bullet} />
+              <Text style={[styles.text, styles.fixes]}>{fix}</Text>
+            </View>
+          ))}
+        </View>
 
-      <div class="section">
-        <div class="section-title">Executive Summary</div>
-        
-        <div class="score-box">
-          <div style="font-size: 18px; font-weight: bold; color: #10b981; margin-bottom: 5px;">
-            CRO Score: ${score}/100
-          </div>
-          <div style="height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden;">
-            <div style="width: ${score}%; height: 100%; background: linear-gradient(90deg, #10b981, #0891b2); transition: width 0.3s ease;"></div>
-          </div>
-        </div>
+        {/* All Other Sections */}
+        {[
+          { title: "Homepage Analysis", data: report.homepage },
+          { title: "Collection Pages", data: report.collection_page },
+          { title: "Product Pages", data: report.product_page },
+          { title: "Cart Experience", data: report.cart_page },
+          { title: "Checkout Flow", data: report.checkout_page },
+          { title: "Technical SEO", data: report.technical_seo },
+          { title: "Trust & Social Proof", data: report.trust_social_proof },
+          { title: "Mobile Experience", data: report.mobile_experience },
+        ].map((section) => (
+          <View key={section.title} style={styles.section} break>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            {section.data.overview && <Text style={{ marginBottom: 12, lineHeight: 1.6 }}>{section.data.overview}</Text>}
 
-        <div class="subsection">
-          <div class="subsection-title">Biggest Wins</div>
-          ${wins.map((win: string) => `<div class="point" style="border-left-color: #10b981;"><strong>✓</strong> ${win}</div>`).join("")}
-        </div>
+            {section.data.issues && (
+              <>
+                <Text style={{ fontWeight: 600, color: "#dc2626", marginBottom: 6 }}>Issues Found</Text>
+                {section.data.issues.map((issue: string, i: number) => (
+                  <View key={i} style={styles.listItem}>
+                    <View style={{ ...styles.bullet, backgroundColor: "#ef4444" }} />
+                    <Text style={styles.text}>{issue}</Text>
+                  </View>
+                ))}
+              </>
+            )}
 
-        <div class="subsection">
-          <div class="subsection-title">Top Priority Fixes</div>
-          ${fixes.map((fix: string) => `<div class="point negative"><strong>⚠</strong> ${fix}</div>`).join("")}
-        </div>
-      </div>
+            {section.data.opportunities && (
+              <>
+                <Text style={{ fontWeight: 600, color: "#059669", marginTop: 12, marginBottom: 6 }}>Opportunities</Text>
+                {section.data.opportunities.map((opp: string, i: number) => (
+                  <View key={i} style={styles.listItem}>
+                    <View style={{ ...styles.bullet, backgroundColor: "#10b981" }} />
+                    <Text style={styles.text}>{opp}</Text>
+                  </View>
+                ))}
+              </>
+            )}
+          </View>
+        ))}
 
-      ${generatePerformanceSection(report.speed_performance)}
-      ${generateHomePageSection(report.homepage)}
-      ${generateProductPageSection(report.product_page)}
-      ${generateCollectionPageSection(report.collection_page)}
-      ${generateCartCheckoutSection(report.cart_page, report.checkout_page)}
-      ${generateSEOSection(report.technical_seo)}
-      ${generateMobileSection(report.mobile_experience)}
-      ${generateTrustSection(report.trust_social_proof)}
-      ${generateHeuristicSection(report.heuristic_evaluation)}
-      ${generateCompetitorSection(report.competitor_analysis)}
-      ${generateActionPlanSection(report.action_plan_90_days)}
+        {/* Speed & Performance – Special Handling */}
+        <View style={styles.section} break>
+          <Text style={styles.sectionTitle}>Speed & Performance</Text>
 
-      <div class="footer">
-        <p style="margin: 0;">This report was automatically generated by BrilliantSales. For more details, visit your dashboard.</p>
-      </div>
-    </div>
-  `
-}
+          {/* Lighthouse Scores */}
+          <Text style={{ fontWeight: 600, marginBottom: 12, color: "#059669" }}>Lighthouse Scores</Text>
+          <View style={{ flexDirection: "row", gap: 24, marginBottom: 20, flexWrap: "wrap" }}>
+            {Object.entries(report.speed_performance.scores).map(([key, value]: [string, any]) => (
+              <View key={key} style={{ alignItems: "center", minWidth: 100 }}>
+                <Text style={{ fontSize: 32, fontWeight: 700, color: value >= 90 ? "#10b981" : value >= 50 ? "#f59e0b" : "#ef4444" }}>
+                  {value}
+                </Text>
+                <Text style={{ fontSize: 10, color: "#6b7280", textTransform: "capitalize" }}>
+                  {key.replace("lighthouse_", "").replace("_", " ")}
+                </Text>
+              </View>
+            ))}
+          </View>
 
-function generatePerformanceSection(data: any): string {
-  if (!data) return ""
-  const scores = data.scores || {}
-  return `
-    <div class="section">
-      <div class="section-title">Speed & Performance</div>
-      <div class="chart-row">
-        <div class="chart-item">
-          <div class="chart-label">Lighthouse Performance</div>
-          <div class="chart-value">${scores.lighthouse_performance}/100</div>
-        </div>
-        <div class="chart-item">
-          <div class="chart-label">Accessibility</div>
-          <div class="chart-value">${scores.lighthouse_accessibility}/100</div>
-        </div>
-        <div class="chart-item">
-          <div class="chart-label">Best Practices</div>
-          <div class="chart-value">${scores.lighthouse_best_practices}/100</div>
-        </div>
-        <div class="chart-item">
-          <div class="chart-label">SEO</div>
-          <div class="chart-value">${scores.lighthouse_seo}/100</div>
-        </div>
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Issues</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+          {/* Issues */}
+          <Text style={{ fontWeight: 600, color: "#dc2626", marginBottom: 8 }}>Performance Issues</Text>
+          {report.speed_performance.issues.map((issue: string, i: number) => (
+            <View key={i} style={styles.listItem}>
+              <View style={{ ...styles.bullet, backgroundColor: "#ef4444" }} />
+              <Text style={styles.text}>{issue}</Text>
+            </View>
+          ))}
 
-function generateHomePageSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Homepage Analysis</div>
-      <p style="font-size: 12px; margin: 10px 0; color: #666;">${data.overview}</p>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+          {/* Opportunities */}
+          <Text style={{ fontWeight: 600, color: "#059669", marginTop: 20, marginBottom: 8 }}>Optimization Opportunities</Text>
+          {report.speed_performance.opportunities.map((opp: string, i: number) => (
+            <View key={i} style={styles.listItem}>
+              <View style={styles.bullet} />
+              <Text style={styles.text}>{opp}</Text>
+            </View>
+          ))}
+        </View>
 
-function generateProductPageSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Product Page Analysis</div>
-      <p style="font-size: 12px; margin: 10px 0; color: #666;">${data.overview}</p>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+        {/* SPECIAL: Heuristic Evaluation */}
+        <View style={styles.section} break>
+          <Text style={styles.sectionTitle}>Heuristic Evaluation</Text>
 
-function generateCollectionPageSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Collection Page Analysis</div>
-      <p style="font-size: 12px; margin: 10px 0; color: #666;">${data.overview}</p>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+          {/* Nielsen's 10 Heuristics */}
+          <View style={styles.subSection}>
+            <Text style={styles.subTitle}>Nielsen's 10 Heuristics</Text>
+            {report.heuristic_evaluation.nielsen.map((item: string, i: number) => (
+              <View key={i} style={styles.listItem}>
+                <View style={styles.bullet} />
+                <Text style={styles.text}>{item}</Text>
+              </View>
+            ))}
+          </View>
 
-function generateCartCheckoutSection(cartData: any, checkoutData: any): string {
-  return `
-    <div class="section">
-      <div class="section-title">Cart & Checkout Analysis</div>
-      
-      ${cartData
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Cart Page</div>
-          <p style="font-size: 12px; margin: 5px 0; color: #666;">${cartData.overview}</p>
-          ${(cartData.issues || [])
-        .slice(0, 3)
-        .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-      
-      ${checkoutData
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Checkout Page</div>
-          <p style="font-size: 12px; margin: 5px 0; color: #666;">${checkoutData.overview}</p>
-          ${(checkoutData.issues || [])
-        .slice(0, 3)
-        .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-    </div>
-  `
-}
+          {/* Fogg Behavior Model */}
+          <View style={styles.subSection}>
+            <Text style={styles.subTitle}>Fogg Behavior Model</Text>
+            {report.heuristic_evaluation.fogg.map((item: string, i: number) => (
+              <View key={i} style={styles.listItem}>
+                <View style={styles.bullet} />
+                <Text style={styles.text}>{item}</Text>
+              </View>
+            ))}
+          </View>
 
-function generateSEOSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Technical SEO</div>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+          {/* Clarity Index */}
+          <View style={styles.subSection}>
+            <Text style={styles.subTitle}>Clarity Index (1–10)</Text>
+            {report.heuristic_evaluation.clarity_index.map((item: string, i: number) => (
+              <View key={i} style={styles.listItem}>
+                <View style={styles.bullet} />
+                <Text style={styles.text}>{item}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
 
-function generateMobileSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Mobile Experience</div>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+        {/* SPECIAL: Competitor Benchmark */}
+        <View style={styles.section} break>
+          <Text style={styles.sectionTitle}>Competitor Benchmark</Text>
+          {report.competitor_analysis.competitors.map((comp: any, i: number) => (
+            <View key={i} style={styles.competitorBox}>
+              <Text style={styles.competitorName}>{comp.name}</Text>
+              <Text style={styles.competitorUrl}>{comp.url}</Text>
+              <Text style={{ fontWeight: 600, marginBottom: 8, color: "#059669" }}>Key Advantages</Text>
+              {comp.key_differences.map((diff: string, j: number) => (
+                <View key={j} style={styles.listItem}>
+                  <View style={styles.bullet} />
+                  <Text style={styles.text}>{diff}</Text>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
 
-function generateTrustSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Trust & Social Proof</div>
-      <div class="subsection">
-        <div class="subsection-title">Issues (${data.issues?.length || 0})</div>
-        ${(data.issues || [])
-      .slice(0, 5)
-      .map((issue: string) => `<div class="point negative">⚠ ${issue}</div>`)
-      .join("")}
-      </div>
-      <div class="subsection">
-        <div class="subsection-title">Opportunities (${data.opportunities?.length || 0})</div>
-        ${(data.opportunities || [])
-      .slice(0, 5)
-      .map((opp: string) => `<div class="point">✓ ${opp}</div>`)
-      .join("")}
-      </div>
-    </div>
-  `
-}
+        {/* 90-Day Action Plan */}
+        <View style={styles.section} break>
+          <Text style={styles.sectionTitle}>90-Day Action Plan</Text>
+          {Object.entries(report.action_plan_90_days).map(([period, items]: [string, any]) => (
+            <View key={period} style={{ marginBottom: 16 }}>
+              <Text style={{ fontWeight: 700, color: "#059669", marginBottom: 8 }}>
+                {period.replace("_", " ").replace("high impact", "(High Impact)").replace("medium impact", "(Medium Impact)").replace("long term", "(Long Term)")}
+              </Text>
+              {items.map((item: string, i: number) => (
+                <View key={i} style={styles.listItem}>
+                  <View style={styles.bullet} />
+                  <Text style={styles.text}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
 
-function generateHeuristicSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Heuristic Evaluation</div>
-      ${data.nielsen
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Nielsen's Usability Heuristics</div>
-          ${(data.nielsen || [])
-        .slice(0, 5)
-        .map((item: string) => `<div class="point">✓ ${item}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-      ${data.fogg
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Fogg's Behavior Model</div>
-          ${(data.fogg || [])
-        .slice(0, 5)
-        .map((item: string) => `<div class="point">✓ ${item}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-    </div>
-  `
-}
+        {/* Footer */}
+        <Text style={styles.footer} fixed>
+          Generated by BrilliantSales • AI-Powered CRO for Shopify • Page <Text render={({ pageNumber, totalPages }) => `${pageNumber} of ${totalPages}`} />
+        </Text>
+      </Page>
+    </Document>
+  )
 
-function generateCompetitorSection(data: any): string {
-  if (!data || !data.competitors) return ""
-  return `
-    <div class="section">
-      <div class="section-title">Competitor Analysis</div>
-      ${(data.competitors || [])
-      .map(
-        (comp: any) => `
-        <div class="subsection">
-          <div class="subsection-title">${comp.name}</div>
-          <p style="font-size: 11px; margin: 5px 0; color: #666;"><strong>URL:</strong> ${comp.url}</p>
-          ${(comp.key_differences || [])
-            .slice(0, 3)
-            .map((diff: string) => `<div class="point">✓ ${diff}</div>`)
-            .join("")}
-        </div>
-      `,
-      )
-      .join("")}
-    </div>
-  `
-}
-
-function generateActionPlanSection(data: any): string {
-  if (!data) return ""
-  return `
-    <div class="section">
-      <div class="section-title">90-Day Action Plan</div>
-      ${data.week_1_2_high_impact
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Week 1-2: High Impact</div>
-          ${(data.week_1_2_high_impact || [])
-        .slice(0, 5)
-        .map((item: string) => `<div class="point">✓ ${item}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-      ${data.days_15_45_medium_impact
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Days 15-45: Medium Impact</div>
-          ${(data.days_15_45_medium_impact || [])
-        .slice(0, 5)
-        .map((item: string) => `<div class="point">✓ ${item}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-      ${data.days_45_90_long_term
-      ? `
-        <div class="subsection">
-          <div class="subsection-title">Days 45-90: Long-term</div>
-          ${(data.days_45_90_long_term || [])
-        .slice(0, 5)
-        .map((item: string) => `<div class="point">✓ ${item}</div>`)
-        .join("")}
-        </div>
-      `
-      : ""
-    }
-    </div>
-  `
+  // Trigger download
+  const blob = await import("@react-pdf/renderer").then((mod) => mod.pdf(<MyDocument />).toBlob())
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = `BrilliantSales_CRO_Report_${storeUrl.replace(/[^a-z0-9]/gi, "_")}_${format(new Date(), "yyyy-MM-dd")}.pdf`
+  link.click()
+  URL.revokeObjectURL(url)
 }
