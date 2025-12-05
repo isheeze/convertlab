@@ -22,7 +22,7 @@ export function ReportDisplay({ report }: { report: any }) {
   const handleDownloadPDF = async () => {
     setDownloading(true)
     try {
-      await generateCROReportPDF(report)
+      //await generateCROReportPDF(report)
     } catch (error) {
       console.error("Error generating PDF:", error)
       alert("Failed to generate PDF. Please try again.")
