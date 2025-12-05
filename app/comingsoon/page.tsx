@@ -37,7 +37,7 @@ export default function ComingSoon() {
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-5 border-b border-emerald-200/50 backdrop-blur-sm bg-white/40">
         <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-          <a href="/">ConvertLab</a>
+          <a href="/">BrilliantSales</a>
         </div>
         <div className="flex items-center gap-3 px-5 py-2 rounded-full bg-emerald-100/60 border border-emerald-200/60">
           <Sparkles className="w-4 h-4 text-emerald-600" />
@@ -66,7 +66,7 @@ export default function ComingSoon() {
           </div>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            ConvertLab is currently in <span className="font-semibold text-emerald-600">private beta</span>. 
+            BrilliantSales is currently in <span className="font-semibold text-emerald-600">private beta</span>.
             Be the first to get access when we launch publicly.
           </p>
 
@@ -98,7 +98,7 @@ export default function ComingSoon() {
                 <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-gray-800">You're on the list!</h3>
                 <p className="text-muted-foreground mt-2">
-                  We'll notify you the moment ConvertLab goes public.
+                  We'll notify you the moment BrilliantSales goes public.
                 </p>
               </div>
             )}
@@ -117,7 +117,7 @@ export default function ComingSoon() {
       <footer className="relative z-10 border-t border-emerald-200/50 bg-white/40 backdrop-blur-sm py-12">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <p className="text-sm text-muted-foreground">
-            © 2025 ConvertLab. All rights reserved. • Made with love for Shopify founders
+            © 2025 BrilliantSales. All rights reserved. • Made with love for Shopify founders
           </p>
         </div>
       </footer>

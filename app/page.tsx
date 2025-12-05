@@ -10,7 +10,7 @@ export default function Home() {
 
   const faqItems = [
     {
-      question: "How does ConvertLab analyze my Shopify store?",
+      question: "How does BrilliantSales analyze my Shopify store?",
       answer:
         "We use advanced AI to analyze every aspect of your store including homepage, product pages, collection pages, cart flow, and checkout. Our system evaluates design, performance, trust signals, mobile experience, and more.",
     },
@@ -108,7 +108,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-5 border-b border-emerald-200/50 backdrop-blur-sm bg-white/40">
         <div className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-          <a href="/">ConvertLab</a>
+          <a href="/">BrilliantSales</a>
         </div>
         <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-foreground hover:text-emerald-600 transition">
@@ -204,112 +204,112 @@ export default function Home() {
       </section>
 
       {/* How It Works – FINAL Fixed & Perfect Version */}
-<section className="relative z-10 py-24 px-6 overflow-hidden border-t border-emerald-200/50">
-  {/* Soft background glows */}
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-300/20 rounded-full blur-3xl animate-pulse"></div>
-    <div className="absolute bottom-20 -right-20 w-80 h-80 bg-teal-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-    <div className="absolute top-1/2 -left-20 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
-  </div>
+      <section className="relative z-10 py-24 px-6 overflow-hidden border-t border-emerald-200/50">
+        {/* Soft background glows */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-300/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 -right-20 w-80 h-80 bg-teal-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 -left-20 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
 
-  <div className="relative z-10 max-w-6xl mx-auto">
-    <div className="text-center mb-20">
-      <h2 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
-        How It Works
-      </h2>
-      <p className="mt-4 text-xl text-muted-foreground">Three simple steps to skyrocket your conversions</p>
-    </div>
-
-    {/* Curved glowing timeline */}
-    <div className="relative">
-      <svg
-        className="absolute inset-x-0 top-44 w-full h-32 pointer-events-none"        viewBox="0 0 1200 200"        fill="none"      >
-        <path
-          d="M 100 100 Q 600 20, 1100 100"
-          stroke="url(#glowLine)"
-          strokeWidth="5"
-          opacity="0.6"
-          className="drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-        />
-        <defs>
-          <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10b981" />
-            <stop offset="50%" stopColor="#14b8a6" />
-            <stop offset="100%" stopColor="#06b6d4" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      <div className="grid md:grid-cols-3 gap-12 relative">
-        {[
-          {
-            step: "01",
-            title: "Enter Store URL",
-            desc: "Just paste your Shopify store link — no login needed",
-            emoji: <Link2 className="w-16 h-16" />,
-            gradient: "from-emerald-500 to-teal-500",
-          },
-          {
-            step: "02",
-            title: "AI Analysis",
-            desc: "Our AI scans every page, design, and flow in seconds",
-            emoji: <Brain className="w-16 h-16" />,
-            gradient: "from-teal-500 to-cyan-500",
-          },
-          {
-            step: "03",
-            title: "Get Report",
-            desc: "Instant detailed insights + downloadable PDF report",
-            emoji: <Rocket className="w-16 h-16" />,
-            gradient: "from-cyan-500 to-blue-500",
-          },
-        ].map((item, i) => (
-          <div key={i} className="relative group text-center">
-            {/* Hover glow */}
-            <div className={`absolute -inset-6 rounded-3xl bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-30 blur-2xl transition duration-700`}></div>
-
-            {/* Main Card */}
-            <div className="relative bg-white/70 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-10 pt-16 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-6">
-              {/* Step Circle */}
-              <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center text-4xl font-black text-white shadow-2xl ring-8 ring-white`}>
-                {item.step}
-              </div>
-
-              {/* Real Emoji */}
-              <div className="text-7xl mb-6 flex justify-center">
-                {item.emoji}
-              </div>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">{item.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
-
-              {/* Tiny sparkles */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
-                {[...Array(8)].map((_, p) => (
-                  <div
-                    key={p}
-                    className="absolute w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-80 animate-ping"
-                    style={{
-                      top: `${20 + Math.random() * 60}%`,
-                      left: `${Math.random() * 100}%`,
-                      animationDelay: `${p * 0.15}s`,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+              How It Works
+            </h2>
+            <p className="mt-4 text-xl text-muted-foreground">Three simple steps to skyrocket your conversions</p>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+
+          {/* Curved glowing timeline */}
+          <div className="relative">
+            <svg
+              className="absolute inset-x-0 top-44 w-full h-32 pointer-events-none" viewBox="0 0 1200 200" fill="none"      >
+              <path
+                d="M 100 100 Q 600 20, 1100 100"
+                stroke="url(#glowLine)"
+                strokeWidth="5"
+                opacity="0.6"
+                className="drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              />
+              <defs>
+                <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#10b981" />
+                  <stop offset="50%" stopColor="#14b8a6" />
+                  <stop offset="100%" stopColor="#06b6d4" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div className="grid md:grid-cols-3 gap-12 relative">
+              {[
+                {
+                  step: "01",
+                  title: "Enter Store URL",
+                  desc: "Just paste your Shopify store link — no login needed",
+                  emoji: <Link2 className="w-16 h-16" />,
+                  gradient: "from-emerald-500 to-teal-500",
+                },
+                {
+                  step: "02",
+                  title: "AI Analysis",
+                  desc: "Our AI scans every page, design, and flow in seconds",
+                  emoji: <Brain className="w-16 h-16" />,
+                  gradient: "from-teal-500 to-cyan-500",
+                },
+                {
+                  step: "03",
+                  title: "Get Report",
+                  desc: "Instant detailed insights + downloadable PDF report",
+                  emoji: <Rocket className="w-16 h-16" />,
+                  gradient: "from-cyan-500 to-blue-500",
+                },
+              ].map((item, i) => (
+                <div key={i} className="relative group text-center">
+                  {/* Hover glow */}
+                  <div className={`absolute -inset-6 rounded-3xl bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-30 blur-2xl transition duration-700`}></div>
+
+                  {/* Main Card */}
+                  <div className="relative bg-white/70 backdrop-blur-xl border border-white/60 shadow-xl rounded-3xl p-10 pt-16 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 hover:-translate-y-6">
+                    {/* Step Circle */}
+                    <div className={`absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center text-4xl font-black text-white shadow-2xl ring-8 ring-white`}>
+                      {item.step}
+                    </div>
+
+                    {/* Real Emoji */}
+                    <div className="text-7xl mb-6 flex justify-center">
+                      {item.emoji}
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-gray-800 mb-3">{item.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
+
+                    {/* Tiny sparkles */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
+                      {[...Array(8)].map((_, p) => (
+                        <div
+                          key={p}
+                          className="absolute w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-80 animate-ping"
+                          style={{
+                            top: `${20 + Math.random() * 60}%`,
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${p * 0.15}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Social Proof & Integrations */}
       <TestimonialsSection />
-          
+
 
       {/* Pricing Section */}
       <section id="pricing" className="relative z-10 py-20 px-6 border-t border-emerald-200/50">
@@ -323,11 +323,10 @@ export default function Home() {
             {pricing.map((plan, i) => (
               <div
                 key={i}
-                className={`rounded-2xl p-8 transition-all duration-300 ${
-                  plan.highlighted
+                className={`rounded-2xl p-8 transition-all duration-300 ${plan.highlighted
                     ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-105"
                     : "bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg text-foreground"
-                }`}
+                  }`}
               >
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                 <p className={`text-sm mb-6 ${plan.highlighted ? "text-white/90" : "text-muted-foreground"}`}>
@@ -340,11 +339,10 @@ export default function Home() {
                   </span>
                 </div>
                 <button
-                  className={`w-full py-3 rounded-full font-semibold transition-all mb-8 ${
-                    plan.highlighted
+                  className={`w-full py-3 rounded-full font-semibold transition-all mb-8 ${plan.highlighted
                       ? "bg-white text-emerald-600 hover:bg-white/90"
                       : "border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
-                  }`}
+                    }`}
                 >
                   Get Started
                 </button>
@@ -367,7 +365,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-muted-foreground">Everything you need to know about ConvertLab</p>
+            <p className="text-lg text-muted-foreground">Everything you need to know about BrilliantSales</p>
           </div>
 
           <div className="space-y-4">
@@ -418,14 +416,14 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
-                ConvertLab
+                BrilliantSales
               </div>
               <p className="text-sm text-muted-foreground">AI-powered CRO analysis for Shopify stores</p>
             </div>
-            
+
           </div>
           <div className="border-t border-emerald-200/50 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2025 ConvertLab. All rights reserved.</p>
+            <p>&copy; 2025 BrilliantSales. All rights reserved.</p>
           </div>
         </div>
       </footer>

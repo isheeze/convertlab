@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ConvertLab - CRO Analysis for Shopify",
+  title: "BrilliantSales - CRO Analysis for Shopify",
   description: "Generate detailed CRO reports for your Shopify store and get actionable insights to boost conversions",
   icons: {
     icon: [

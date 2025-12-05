@@ -10,7 +10,7 @@ export default function TestimonialsSection() {
       author: "Sarah Chen",
       role: "E-commerce Manager",
       company: "TechStyle Co.",
-      content: "ConvertLab helped us identify that we were missing customer reviews on product pages. After implementing the recommendations, our conversion rate jumped 23%!",
+      content: "BrilliantSales helped us identify that we were missing customer reviews on product pages. After implementing the recommendations, our conversion rate jumped 23%!",
       metric: "+23%",
       metricLabel: "Conversion Rate",
       gradient: "from-violet-500 to-purple-500",
@@ -40,7 +40,7 @@ export default function TestimonialsSection() {
       author: "Liam Eriksson",
       role: "Head of Growth",
       company: "Nordic Outdoors",
-      content: "We were skeptical at first, but ConvertLab uncovered friction points we never noticed. Fixing the checkout flow alone boosted our sales by 41% in just two weeks.",
+      content: "We were skeptical at first, but BrilliantSales uncovered friction points we never noticed. Fixing the checkout flow alone boosted our sales by 41% in just two weeks.",
       metric: "+41%",
       metricLabel: "Checkout Completion",
       gradient: "from-amber-500 to-orange-500",
@@ -94,7 +94,7 @@ export default function TestimonialsSection() {
             Trusted by Store Owners
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join hundreds of e-commerce businesses using ConvertLab to boost their conversions
+            Join hundreds of e-commerce businesses using BrilliantSales to boost their conversions
           </p>
         </div>
 
@@ -104,9 +104,8 @@ export default function TestimonialsSection() {
             <div
               key={i}
               onClick={() => handleCardClick(i)}
-              className={`relative group cursor-pointer transition-all duration-500 ${
-                activeTestimonial === i ? 'lg:scale-105' : 'lg:scale-95 lg:opacity-70'
-              }`}
+              className={`relative group cursor-pointer transition-all duration-500 ${activeTestimonial === i ? 'lg:scale-105' : 'lg:scale-95 lg:opacity-70'
+                }`}
             >
               <div className={`absolute -inset-1 bg-gradient-to-r ${testimonial.gradient} rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}></div>
 

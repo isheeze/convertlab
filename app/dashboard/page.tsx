@@ -41,7 +41,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
           >
             <ArrowLeftIcon className="w-5 h-5 text-emerald-600" />
-            ConvertLab
+            BrilliantSales
           </Link>
           <div className="text-sm text-muted-foreground">
             {reports.length} {reports.length === 1 ? "report" : "reports"} generated
