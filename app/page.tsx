@@ -181,28 +181,55 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="relative z-10 py-20 px-6 border-t border-emerald-200/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Comprehensive Store Analysis</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Every aspect of your Shopify store analyzed in one detailed report
-            </p>
-          </div>
+      {/* ==================== TINY & ADDICTIVE REPORT CONTENTS ==================== */}
+      <section id="features" className="py-20 px-6 bg-gradient-to-b from-transparent via-emerald-50/50 to-transparent">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-700 bg-clip-text text-transparent">
+            Your Full CRO Report Includes
+          </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
+          {/* Magic expanding chips line */}
+          <div className="mt-12 flex flex-wrap justify-center gap-3 md:gap-4">
+            {[
+              "Biggest Wins",
+              "Top Priority Fixes",
+              "Homepage",
+              "Collections",
+              "Product Pages",
+              "Cart + Checkout",
+              "Technical SEO",
+              "Mobile UX",
+              "Lighthouse Scores",
+              "Nielsen + Fogg Evaluation",
+              "Competitor Spy",
+              "90-Day Action Plan",
+              "And much more..."
+            ].map((text, i) => (
               <div
                 key={i}
-                className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-emerald-500/10 rounded-2xl p-6 hover:bg-white/80 hover:shadow-emerald-500/20 transition-all duration-300"
+                className="group relative px-5 py-3 bg-white/70 backdrop-blur-xl border border-white/60 rounded-full text-sm md:text-base font-medium text-gray-700 shadow-md hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-500 hover:scale-110 hover:-translate-y-1"
+                style={{ animationDelay: `${i * 60}ms` }}
               >
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <span className="relative z-10">{text}</span>
+
+                {/* Tiny sparkle on hover */}
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></span>
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"></span>
               </div>
             ))}
           </div>
+
+          {/* One-line punch + CTA */}
+          <p className="mt-12 text-lg md:text-xl text-muted-foreground font-medium">
+            Delivered in under 5 minutes
+          </p>
+
+          <Link
+            href="/dashboard"
+            className="mt-8 inline-block px-10 py-4 rounded-full font-bold text-white bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 transform hover:scale-105 transition-all duration-300"
+          >
+            Get Your Report Instantly
+          </Link>
         </div>
       </section>
 
