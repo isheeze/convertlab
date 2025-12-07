@@ -6,6 +6,7 @@ import { ChevronDown, CheckCircle2, Zap, BarChart3, Lock, Sparkles, Link2, Brain
 import TestimonialsSection from "@/components/testimonials-slider"
 import { LegalModal } from "@/components/legal-modal"
 import { legalContent } from "@/lib/legal-content"
+import FreemiusCheckoutButton from "@/components/freemius-checkout-button"
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState(0)
@@ -70,18 +71,22 @@ export default function Home() {
   const pricing = [
     {
       name: "Starter",
-      price: "$29",
+      priceMonthly: "$19.99",
+      priceYearly: "$199.99",
       period: "/month",
       description: "Perfect for new stores",
-      features: ["5 reports/month", "Basic analysis", "PDF export", "Email support"],
+      features: ["4 reports / month", "Basic analysis", "PDF export", "Email support"],
+      planId: "37056",
     },
     {
       name: "Professional",
-      price: "$79",
+      priceMonthly: "$49.99",
+      priceYearly: "$499.99",
       period: "/month",
       description: "For growing businesses",
-      features: ["Unlimited reports", "Advanced analysis", "90-day action plan", "Priority support"],
+      features: ["25 reports / month", "Advanced analysis", "90-day action plan", "Priority support"],
       highlighted: true,
+      planId: "37057",
     },
     {
       name: "Enterprise",
@@ -320,8 +325,8 @@ export default function Home() {
                           key={p}
                           className="absolute w-1 h-1 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-80 animate-ping"
                           style={{
-                            top: `${20 + Math.random() * 60}%`,
-                            left: `${Math.random() * 100}%`,
+                            top: `${20 + ((p * 17 + i * 13) % 60)}%`,
+                            left: `${((p * 23 + i * 7) % 100)}%`,
                             animationDelay: `${p * 0.15}s`,
                           }}
                         />
@@ -340,53 +345,97 @@ export default function Home() {
       {/* Social Proof & Integrations */}
       <TestimonialsSection />
 
+      {/* Pricing Section – Clean & Premium */}
+      <section id="pricing" className="relative z-10 py-24 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-5xl font-black bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+            Simple, Transparent Pricing
+          </h2>
+          <p className="mt-4 text-xl text-muted-foreground">Choose the perfect plan for your store</p>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="relative z-10 py-20 px-6 border-t border-emerald-200/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-lg text-muted-foreground">Choose the plan that fits your business</p>
+          {/* Yearly savings callout */}
+          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2 bg-emerald-100/70 rounded-full">
+            <Sparkles className="w-4 h-4 text-emerald-600" />
+            <span className="text-sm font-bold text-emerald-700">Pay yearly → save 16.63%%</span>
           </div>
+        </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {pricing.map((plan, i) => (
-              <div
-                key={i}
-                className={`rounded-2xl p-8 transition-all duration-300 ${plan.highlighted
-                  ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 scale-105"
-                  : "bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg text-foreground"
-                  }`}
-              >
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className={`text-sm mb-6 ${plan.highlighted ? "text-white/90" : "text-muted-foreground"}`}>
-                  {plan.description}
-                </p>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className={`text-sm ml-2 ${plan.highlighted ? "text-white/90" : "text-muted-foreground"}`}>
-                    {plan.period}
-                  </span>
+        <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {pricing.map((plan, i) => (
+            <div
+              key={i}
+              className={`relative rounded-3xl p-8 transition-all duration-500 hover:-translate-y-3 ${plan.highlighted
+                ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-2xl shadow-emerald-500/40"
+                : "bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl"
+                }`}
+            >
+              {/* Most Popular badge */}
+              {plan.highlighted && (
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-white text-emerald-600 rounded-full text-sm font-bold shadow-lg">
+                  Most Popular
                 </div>
-                <button
-                  className={`w-full py-3 rounded-full font-semibold transition-all mb-8 ${plan.highlighted
-                    ? "bg-white text-emerald-600 hover:bg-white/90"
-                    : "border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+              )}
+
+              <h3 className="text-2xl font-bold">{plan.name}</h3>
+              <p className={`mt-2 text-sm ${plan.highlighted ? "text-white/80" : "text-muted-foreground"}`}>
+                {plan.description}
+              </p>
+
+              {/* Pricing Block */}
+              {plan.priceMonthly ? (
+                <div className="mt-8">
+                  {/* Regular monthly */}
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-5xl font-black">{plan.priceMonthly}</span>
+                    <span className="text-lg opacity-80">/month</span>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="my-1 h-px bg-white/20" />
+
+                  {/* Yearly deal – the star of the show */}
+                  <div className="text-center">
+                    <p className="mt-1 text-sm opacity-70">
+                      billed annually ({plan.priceYearly}/year)
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-8">
+                  <div className="text-4xl font-bold">{plan.price}</div>
+                  <div className="text-sm mt-1 opacity-80">{plan.period}</div>
+                </div>
+              )}
+
+              {/* CTA */}
+              {/* Inside your pricing map */}
+              {plan.planId ? (
+                <FreemiusCheckoutButton
+                  planId={plan.planId}
+                  className={`mt-10 w-full py-4 rounded-2xl font-bold text-lg transition-all ${plan.highlighted
+                    ? "bg-white text-emerald-600 hover:bg-gray-100 shadow-lg"
+                    : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg"
                     }`}
                 >
-                  {/* Get Started */} Upcoming
+                  Get Started
+                </FreemiusCheckoutButton>
+              ) : (
+                <button className="mt-10 w-full py-4 rounded-2xl font-bold text-lg bg-gray-800 text-white">
+                  Contact Sales
                 </button>
-                <ul className="space-y-3">
-                  {plan.features.map((feature, j) => (
-                    <li key={j} className="flex items-center gap-2 text-sm">
-                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+              )}
+
+              {/* Features */}
+              <ul className="mt-8 space-y-4">
+                {plan.features.map((feature, j) => (
+                  <li key={j} className="flex items-center gap-3 text-sm">
+                    <CheckCircle2 className={`w-5 h-5 flex-shrink-0 ${plan.highlighted ? "text-white" : "text-emerald-600"}`} />
+                    <span className={plan.highlighted ? "text-white/90" : ""}>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 

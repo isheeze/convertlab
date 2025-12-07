@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
 })
 
 export const generateCROReportPDF = async (report: any) => {
+
   const storeUrl = report.storeUrl || "Your Shopify Store"
   const generatedAt = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 

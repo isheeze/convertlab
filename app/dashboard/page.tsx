@@ -1,29 +1,60 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ReportForm } from "@/components/report-form"
 import { ReportDisplay } from "@/components/report-display"
 import { HistoryPanel } from "@/components/history-panel"
 import { ArrowLeftIcon } from "lucide-react"
 import { useReportHistory } from "@/hooks/use-report-history"
+import { UserButton, useUser } from "@clerk/nextjs"
+import { createClient } from "@supabase/supabase-js"
 
 export default function DashboardPage() {
   const [selectedReport, setSelectedReport] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const { reports, addReport, deleteReport } = useReportHistory()
+  const [remainingReports, setRemainingReports] = useState<number | null>(null)
+  const { user } = useUser()
+
+  const fetchRemainingReports = async () => {
+    if (!user) return
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    const { data, error } = await supabase
+      .from("user")
+      .select("remaining_reports")
+      .eq("clerk_id", user.id)
+      .single()
+
+    if (data) {
+      setRemainingReports(data.remaining_reports)
+    }
+  }
+
+  useEffect(() => {
+    fetchRemainingReports()
+  }, [user])
 
   const handleGenerateReport = async (storeUrl: string, reportData: any) => {
     // Create report object with ID and timestamp
+
     const report = {
       id: Date.now().toString(),
       storeUrl,
       createdAt: new Date().toISOString(),
-      ...reportData,
+      report: { ...reportData },
     }
 
     addReport(report)
-    setSelectedReport(report)
+    setSelectedReport({ ...report.report, storeUrl })
+
+    // Refresh credits
+    await fetchRemainingReports()
   }
 
   return (
@@ -43,8 +74,17 @@ export default function DashboardPage() {
             <ArrowLeftIcon className="w-5 h-5 text-emerald-600" />
             BrilliantSales
           </Link>
-          <div className="text-sm text-muted-foreground">
-            {reports.length} {reports.length === 1 ? "report" : "reports"} generated
+          <div className="text-sm text-muted-foreground flex items-center gap-4">
+            <div className="flex items-center gap-1 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+              <span className="font-medium text-emerald-700">
+                {remainingReports !== null ? remainingReports : "-"}
+              </span>
+              <span className="text-emerald-600/80">credits left</span>
+            </div>
+            {remainingReports === 0 && <a href="/#pricing" className="px-6 py-2.5 rounded-full font-semibold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white transition-all duration-300 shadow-lg hover:shadow-emerald-500/40">
+              Buy Credits
+            </a>}
+            <UserButton />
           </div>
         </div>
       </nav>
@@ -54,7 +94,7 @@ export default function DashboardPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Report Generator */}
             <div className="lg:col-span-2">
-              <ReportForm onSubmit={handleGenerateReport} loading={loading} />
+              <ReportForm onSubmit={handleGenerateReport} loading={loading} remainingReports={remainingReports} />
             </div>
 
             {/* History Sidebar */}

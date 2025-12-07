@@ -6,13 +6,28 @@ import { useState } from "react"
 import { Loader } from "lucide-react"
 import { generateCROReport } from "@/lib/api-client"
 
-export function ReportForm({ onSubmit, loading }: { onSubmit: (url: string, report: any) => void; loading: boolean }) {
+export function ReportForm({
+  onSubmit,
+  loading,
+  remainingReports,
+}: {
+  onSubmit: (url: string, report: any) => void
+  loading: boolean
+  remainingReports: number | null
+}) {
   const [storeUrl, setStoreUrl] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  const hasCredits = remainingReports === null || remainingReports > 0
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!hasCredits) {
+      setError("You have 0 credits remaining. Please upgrade your plan.")
+      return
+    }
 
     // Validate URL
     try {
@@ -55,14 +70,19 @@ export function ReportForm({ onSubmit, loading }: { onSubmit: (url: string, repo
               onChange={(e) => setStoreUrl(e.target.value)}
               placeholder="https://yourstore.myshopify.com"
               className="w-full px-4 py-3 rounded-lg bg-white border border-emerald-200 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-              disabled={isProcessing}
+              disabled={isProcessing || !hasCredits}
             />
             {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+            {!hasCredits && !error && (
+              <p className="text-amber-600 text-sm mt-2 font-medium">
+                You have 0 credits remaining. Please upgrade to generate more reports.
+              </p>
+            )}
           </div>
 
           <button
             type="submit"
-            disabled={isProcessing || !storeUrl}
+            disabled={isProcessing || !storeUrl || !hasCredits}
             className="w-full px-8 py-3 rounded-lg font-semibold bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white transition-all duration-300 shadow-lg hover:shadow-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isProcessing && <Loader className="w-4 h-4 animate-spin" />}

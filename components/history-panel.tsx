@@ -6,9 +6,7 @@ interface Report {
   id: string
   storeUrl: string
   createdAt: string
-  executive_summary?: {
-    cro_score: number
-  }
+  report?: any
 }
 
 export function HistoryPanel({
@@ -47,12 +45,12 @@ export function HistoryPanel({
               key={report.id}
               className="p-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-200 hover:border-emerald-300 group"
             >
-              <button onClick={() => onSelectReport(report)} className="w-full text-left space-y-2">
+              <button onClick={() => onSelectReport({ ...report?.report, storeUrl: report.storeUrl })} className="w-full text-left space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-sm font-medium text-foreground truncate flex-1">{report.storeUrl}</p>
-                  {report.executive_summary?.cro_score && (
+                  {report?.report?.executive_summary?.cro_score && (
                     <p className="text-sm font-bold text-emerald-600 flex-shrink-0">
-                      {report.executive_summary.cro_score}%
+                      {report?.report?.executive_summary.cro_score}%
                     </p>
                   )}
                 </div>
