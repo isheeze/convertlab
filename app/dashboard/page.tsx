@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const [remainingReports, setRemainingReports] = useState<number | null>(null)
   const { user } = useUser()
 
-  const fetchRemainingReports = async () => {
+  const fetchRemainingReports = async (retries = 3) => {
     if (!user) return
 
     const supabase = createClient(
@@ -33,6 +33,9 @@ export default function DashboardPage() {
 
     if (data) {
       setRemainingReports(data.remaining_reports)
+    } else if (retries > 0) {
+      // If user not found (likely still syncing), retry after delay
+      setTimeout(() => fetchRemainingReports(retries - 1), 1000)
     }
   }
 

@@ -71,7 +71,9 @@ export async function POST(req: Request) {
             .insert({
                 clerk_id: clerkUserId,
                 payment_plan: 'free',
-                remaining_reports: 0
+                remaining_reports: 0,
+                subscription_start_date: new Date().toISOString(),
+                remaining_months: 1,
             })
 
         if (error) {
