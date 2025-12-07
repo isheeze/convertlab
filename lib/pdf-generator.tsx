@@ -64,11 +64,9 @@ export const generateCROReportPDF = async (report: any) => {
           <Text style={styles.title}>BrilliantSales CRO Report</Text>
           <Text style={styles.subtitle}>AI-Powered Conversion Rate Optimization Analysis</Text>
           <Text style={{ fontSize: 12, color: "#10b981", fontWeight: 600 }}>{storeUrl}</Text>
-          <Text style={{ fontSize: 10, color: "#6b7280", marginTop: 4 }}>Generated on {generatedAt}</Text>
-        </View>
+          <Text style={{ fontSize: 10, color: "#6b7280", marginBottom: 8, marginTop: 4 }}>Generated on {generatedAt}</Text>
 
-        {/* Executive Summary */}
-        <View style={styles.section}>
+          {/* Executive Summary */}
           <Text style={styles.sectionTitle}>Executive Summary</Text>
           <View style={styles.scoreBox}>
             <Text style={styles.score}>{report.executive_summary.cro_score}/100</Text>

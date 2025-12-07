@@ -115,6 +115,15 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      <footer className="relative z-10 border-t border-emerald-200/50 bg-white/40 backdrop-blur-sm mt-auto">
+        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <p>&copy; 2025 BrilliantSales. All rights reserved.</p>
+          <a href="mailto:ultratalent.pk@gmail.com" className="hover:text-emerald-600 transition-colors">
+            Contact Support
+          </a>
+        </div>
+      </footer>
     </div>
   )
 }

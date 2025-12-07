@@ -512,6 +512,11 @@ export default function Home() {
                     Terms of Service
                   </button>
                 </li>
+                <li>
+                  <a href="mailto:ultratalent.pk@gmail.com" className="hover:text-emerald-600 transition-colors">
+                    Contact Support
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

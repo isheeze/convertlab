@@ -46,14 +46,14 @@ export default function FreemiusCheckoutButton({ planId, children, className }: 
         const handler = new window.FS.Checkout({
             product_id: "22164",
             plan_id: planId,
-            public_key: "pk_f888e9b03791aca88e81c2a53ed6d",
+            public_key: process.env.FREEMIUS_PUBLIC_KEY,
             image: window.location.origin + "/logo.png",
         });
 
         const sandbox = await fetch('/api/freemius/token').then((res) => res.json());
 
         handler.open({
-            sandbox: sandbox,
+            //sandbox: sandbox,
             name: "BrilliantSales",
             licenses: 1,
             purchaseCompleted: async (data: any) => {
